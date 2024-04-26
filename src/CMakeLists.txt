@@ -86,16 +86,16 @@ string(REPLACE ":" "." LIBAVRO_DOT_VERSION ${LIBAVRO_VERSION})
 
 add_library(avro-static STATIC ${AVRO_SRC})
 target_link_libraries(avro-static ${JANSSON_LIBRARIES} ${CODEC_LIBRARIES} ${THREADS_LIBRARIES})
-set_target_properties(avro-static PROPERTIES OUTPUT_NAME avro)
+#set_target_properties(avro-static PROPERTIES OUTPUT_NAME avro)
 
 if (NOT WIN32)
 # TODO: Create Windows DLLs. See https://www.cmake.org/Wiki/BuildingWinDLL
 add_library(avro-shared SHARED ${AVRO_SRC})
 target_link_libraries(avro-shared ${JANSSON_LIBRARIES} ${CODEC_LIBRARIES} ${THREADS_LIBRARIES})
-set_target_properties(avro-shared PROPERTIES
-        OUTPUT_NAME avro
-        VERSION ${LIBAVRO_DOT_VERSION}
-        SOVERSION ${LIBAVRO_SOVERSION})
+#set_target_properties(avro-shared PROPERTIES
+#        OUTPUT_NAME avro
+#        VERSION ${LIBAVRO_DOT_VERSION}
+#        SOVERSION ${LIBAVRO_SOVERSION})
 endif(NOT WIN32)
 
 install(FILES
@@ -148,3 +148,22 @@ add_executable(avromod avromod.c)
 target_link_libraries(avromod avro-static)
 install(TARGETS avromod RUNTIME DESTINATION bin)
 endif(NOT WIN32)
+
+file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/avro.h
+		DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../include/)
+file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/avro
+		DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../include/)
+
+#get_filename_component(DIRECTORY_PATH "${LIBRARY_FILE}" DIRECTORY)
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../lib/")
+
+add_custom_command(TARGET avro-static POST_BUILD
+		COMMAND cp "$<TARGET_FILE:avro-static>" "${CMAKE_CURRENT_BINARY_DIR}/../lib/"
+		)
+
+add_custom_command(TARGET avro-shared POST_BUILD
+		COMMAND cp "$<TARGET_FILE:avro-shared>" "${CMAKE_CURRENT_BINARY_DIR}/../lib/"
+		)
+
+#get_target_property(LIBRARY_FILE avro-static LOCATION)
+#file(COPY ${LIBRARY_FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../lib/)
