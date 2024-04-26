@@ -1,0 +1,12 @@
+ExternalProject_Add(jansson
+		GIT_REPOSITORY https://github.com/akheron/jansson.git
+		GIT_TAG v2.14
+		SOURCE_DIR "${PROJECT_SOURCE_DIR}/contrib/jansson"
+		#BINARY_DIR ""
+		BUILD_IN_SOURCE TRUE
+		#CONFIGURE_COMMAND cd ${PROJECT_SOURCE_DIR}/contrib/jansson && autoreconf -i && ./configure
+		CONFIGURE_COMMAND ""
+		BUILD_COMMAND mkdir build && cd build && cmake .. && make -j16
+		INSTALL_COMMAND ""
+		TEST_COMMAND ""
+		)
