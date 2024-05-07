@@ -636,6 +636,35 @@ avro_file_writer_append_value(avro_file_writer_t w, avro_value_t *value)
 }
 
 int
+avro_file_writer_append_value(avro_file_writer_t w, avro_value_t *value, void** encodeData, int64_t *len)
+{
+  int rval;
+  check_param(EINVAL, w, "writer");
+  check_param(EINVAL, value, "value");
+
+  rval = avro_value_write(w->datum_writer, value);
+  if (rval) {
+    avro_set_error("Value too large for file block size");
+    return rval;
+  }
+
+  w->block_size = avro_writer_tell(w->datum_writer);
+
+  const avro_encoding_t *enc = &avro_binary_encoding;
+  int rval;
+
+  /* Encode the block */
+  check_prefix(rval, avro_codec_encode(w->codec, w->datum_buffer, w->block_size),
+               "Cannot encode file block: ");
+
+  *encodeData = w->codec->block_data;
+  *len = w->codec->used_size;
+
+  avro_writer_reset(w->datum_writer);
+  return 0;
+}
+
+int
 avro_file_writer_append_encoded(avro_file_writer_t w,
 				const void *buf, int64_t len)
 {
