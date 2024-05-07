@@ -651,7 +651,6 @@ avro_file_writer_get_encode_data(avro_file_writer_t w, avro_value_t *value, void
   w->block_size = avro_writer_tell(w->datum_writer);
 
   const avro_encoding_t *enc = &avro_binary_encoding;
-  int rval;
 
   /* Encode the block */
   check_prefix(rval, avro_codec_encode(w->codec, w->datum_buffer, w->block_size),
