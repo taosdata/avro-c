@@ -135,7 +135,7 @@ avro_file_writer_append_encoded(avro_file_writer_t writer,
 				const void *buf, int64_t len);
 
 int
-avro_file_writer_append_value(avro_file_writer_t w, avro_value_t *value,
+avro_file_writer_get_encode_data(avro_file_writer_t w, avro_value_t *value,
                               void** encodeData, int64_t *len);
 
 /*

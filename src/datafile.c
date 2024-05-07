@@ -636,7 +636,7 @@ avro_file_writer_append_value(avro_file_writer_t w, avro_value_t *value)
 }
 
 int
-avro_file_writer_append_value(avro_file_writer_t w, avro_value_t *value, void** encodeData, int64_t *len)
+avro_file_writer_get_encode_data(avro_file_writer_t w, avro_value_t *value, void** encodeData, int64_t *len)
 {
   int rval;
   check_param(EINVAL, w, "writer");
