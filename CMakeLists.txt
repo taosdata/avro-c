@@ -186,8 +186,8 @@ set(CODEC_PKG "${ZLIB_PKG} ${LZMA_PKG} ${SNAPPY_PKG}")
 add_subdirectory(contrib)
 set(JANSSON_PKG libjansson)
 set(JANSSON_LIBRARIES jansson)
-include_directories(${PROJECT_SOURCE_DIR}/contrib/jansson/build/include)
-link_directories(${PROJECT_SOURCE_DIR}/contrib/jansson/build/lib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/jansson/build/include)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/jansson/build/lib)
 
 
 add_subdirectory(src)
