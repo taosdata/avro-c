@@ -138,6 +138,9 @@ int
 avro_file_writer_get_encode_data(avro_file_writer_t w, avro_value_t *value,
                               void** encodeData, int64_t *len);
 
+int
+avro_get_json_from_data(avro_schema_t schema, void* data, int64_t len, char* type, char** jsonStr);
+
 /*
  * Legacy avro_datum_t API
  */

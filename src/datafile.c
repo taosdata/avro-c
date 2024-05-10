@@ -664,6 +664,49 @@ avro_file_writer_get_encode_data(avro_file_writer_t w, avro_value_t *value, void
 }
 
 int
+avro_get_json_from_data(avro_schema_t schema, void* data, int64_t len, char* type, char** jsonStr){
+  avro_file_reader_t r = (avro_file_reader_t) avro_calloc(sizeof(struct avro_file_reader_t_), 1);
+  if(!r){
+    avro_set_error("Cannot allocate file reader");
+    return ENOMEM;
+  }
+  r->block_reader = avro_reader_memory(0, 0);
+  if (!r->block_reader) {
+    avro_set_error("Cannot allocate block reader");
+    avro_file_reader_close(r);
+    return ENOMEM;
+  }
+  r->codec = (avro_codec_t) avro_new(struct avro_codec_t_);
+  if (!r->codec) {
+    avro_set_error("Could not allocate codec");
+    avro_file_reader_close(r);
+    return ENOMEM;
+  }
+  avro_codec(r->codec, type);
+
+  if (avro_codec_decode(r->codec, data, len) != 0) {
+    avro_file_reader_close(r);
+    return ENOMEM;
+  }
+
+  avro_reader_memory_set_source(r->block_reader, (const char *) r->codec->block_data, r->codec->used_size);
+
+  avro_value_iface_t  *valueIface =
+      avro_generic_class_from_schema(schema);
+
+  avro_value_t valueData;
+  avro_generic_value_new(valueIface, &valueData);
+
+
+  avro_value_read(r->block_reader, &valueData);
+  avro_value_to_json(&valueData, 1, jsonStr);
+  avro_file_reader_close(r);
+  avro_value_decref(&valueData);
+
+  return 0;
+}
+
+int
 avro_file_writer_append_encoded(avro_file_writer_t w,
 				const void *buf, int64_t len)
 {
