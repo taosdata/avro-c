@@ -401,7 +401,8 @@ avro_value_to_json(const avro_value_t *value,
 	    (json,
 	     JSON_ENCODE_ANY |
 	     JSON_INDENT(one_line? 0: 2) |
-	     JSON_ENSURE_ASCII |
+//	     JSON_ENSURE_ASCII |
+             JSON_COMPACT |
 	     JSON_PRESERVE_ORDER);
 	json_decref(json);
 	return 0;
