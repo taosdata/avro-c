@@ -112,6 +112,8 @@ if (WIN32)
    add_definitions(/TP)
 endif(WIN32)
 
+add_definitions(-Wno-implicit-fallthrough -Wno-unused-variable -Wno-error=cast-function-type)
+
 # Uncomment to allow missing fields in the resolved-writer
 # add_definitions(-DAVRO_ALLOW_MISSING_FIELDS_IN_RESOLVED_WRITER)
 
